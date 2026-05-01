@@ -1,0 +1,255 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>ДЕЛО 13 — городская база</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" crossorigin="" />
+<style>
+:root{--bg:#061014;--panel:#0b171d;--line:#1f6f61;--line2:#23463f;--text:#d6f5e7;--muted:#8aa79d;--green:#62ffd1;--terminal:#03080a;--warn:#ffd79c;--err:#ff8a8a;--ok:#8affba;--blue:#95d8ff}*{box-sizing:border-box}html,body{margin:0;min-height:100%;background:radial-gradient(circle at top,#0c2028 0%,var(--bg) 45%,#020607 100%);color:var(--text);font-family:Consolas,"Courier New",monospace}body{padding:14px}button,input{font-family:inherit}.app{max-width:1240px;margin:0 auto}.header,.panel{border:1px solid var(--line);background:rgba(9,21,26,.96);padding:16px;margin-bottom:14px}.header{background:rgba(11,23,29,.96);box-shadow:0 0 24px rgba(0,255,180,.08)}.kicker{color:var(--green);letter-spacing:3px;font-size:12px;text-transform:uppercase}h1{margin:7px 0 4px;font-size:clamp(34px,7vw,58px);line-height:.95;color:#f2fff9}h2,h3{color:var(--green);margin-top:0}.subtitle,.small{color:var(--muted);font-size:13px;line-height:1.55}.status-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-top:16px}.status-item{border:1px solid var(--line2);background:#071015;padding:10px;color:var(--muted);font-size:12px;min-height:62px}.status-item strong{display:block;color:var(--green);margin-top:5px;font-size:13px}.layout{display:grid;grid-template-columns:330px 1fr;gap:14px}.menu button,.button{display:block;width:100%;border:1px solid #24584f;background:#0d2026;color:var(--text);padding:12px;margin-bottom:8px;cursor:pointer;text-align:left;font-size:14px}.menu button:hover,.button:hover{background:#12313a;border-color:var(--green)}.menu button.active{background:#133930;border-color:var(--green);color:#fff}.button.inline{width:auto;display:inline-block;margin-right:8px}.content{min-height:680px}.terminal{background:var(--terminal);border:1px solid var(--line2);padding:16px;color:#7dffb3;line-height:1.58;white-space:pre-wrap;overflow-wrap:anywhere}input[type=text]{width:100%;padding:12px;background:#03080a;border:1px solid #24584f;color:#e9fff7;font-size:16px;outline:none;margin-bottom:8px}input[type=text]:focus{border-color:var(--green)}.badge{display:inline-block;padding:4px 8px;border:1px solid #24584f;background:#061215;margin:0 6px 6px 0;color:var(--green);font-size:12px}.badge.dim{color:var(--muted);border-color:#344943}.badge.warn{color:var(--warn);border-color:#8e6534}.badge.ok{color:var(--ok);border-color:#2c8c60}.card{border:1px solid var(--line2);background:#071015;padding:14px;margin-bottom:12px}.card h3{margin:0 0 10px;color:#f2fff9}.warning,.success,.error,.info{padding:12px;margin:12px 0;line-height:1.5;border:1px solid}.warning{border-color:#8e6534;background:#1b1309;color:var(--warn)}.success{border-color:#2c8c60;background:#071b13;color:var(--ok)}.error{border-color:#8c2c2c;background:#1b0707;color:var(--err)}.info{border-color:#286178;background:#07141b;color:var(--blue)}.locked{color:#ffb86b}.final-code{font-size:clamp(22px,5vw,36px);letter-spacing:4px;color:#fff;text-align:center;padding:18px;border:1px solid var(--green);background:#020707;margin-top:12px}.progress{border:1px solid var(--line2);background:#03080a;height:14px;overflow:hidden;margin-top:8px}.progress div{height:100%;width:0;background:linear-gradient(90deg,#1f6f61,var(--green));transition:width .25s}.top-actions,.map-toolbar,.key-fragments{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}.top-actions button{width:auto;margin:0}.hint{border:1px dashed #556c65;padding:10px;color:#bdded3;margin-top:10px;background:#071015}.grid2{display:grid;grid-template-columns:1fr 1fr;gap:12px}.fragment{min-width:54px;text-align:center;border:1px solid var(--line2);background:#03080a;padding:10px;font-size:22px;color:var(--muted)}.fragment.active{border-color:var(--green);color:#fff;box-shadow:0 0 14px rgba(98,255,209,.12)}#cityMap{width:100%;height:520px;border:1px solid var(--line2);background:#020607;margin-bottom:12px}.leaflet-container{background:#020607;font-family:Consolas,"Courier New",monospace}.leaflet-popup-content-wrapper,.leaflet-popup-tip{background:#071015;color:var(--text);border:1px solid var(--line2)}.map-fallback{border:1px solid var(--line2);background:#020607;padding:16px;margin-bottom:12px;line-height:1.65}.layer-row{display:flex;justify-content:space-between;gap:10px;border:1px solid var(--line2);background:#03080a;padding:10px;margin-bottom:8px}.layer-row strong{color:#fff}.timeline{border-left:1px solid var(--line);margin-left:10px;padding-left:14px}.log-entry{margin:0 0 12px;color:#a8cfc3}.log-entry strong{color:var(--green)}.scan-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}.scan-cell{border:1px solid var(--line2);background:#03080a;padding:10px;color:var(--muted)}.scan-cell strong{color:var(--green);display:block;margin-top:4px}.layer-detail{border:1px solid var(--line2);background:#061215;padding:12px;margin-bottom:10px}.layer-detail h4{margin:0 0 8px;color:#fff}.layer-detail p{margin:6px 0}.layer-detail .label{color:var(--green)}#oldLayerMap{width:100%;height:520px;border:1px solid var(--line2);background:#020607;margin-bottom:12px}.old-feature{border:1px solid var(--line2);background:#071015;padding:12px;margin-bottom:10px}.old-feature h4{margin:0 0 8px;color:#fff}.legend{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0 14px}.legend span{border:1px solid var(--line2);background:#03080a;padding:6px 8px;color:var(--muted);font-size:12px}.leaflet-attribution-flag{display:none!important}#oldLayerMap .leaflet-tile{filter:grayscale(100%) contrast(112%) brightness(96%)}.old-map-label{background:rgba(2,6,7,.82);border:1px solid #111;color:#111;padding:0;font-weight:900;text-transform:uppercase;letter-spacing:.5px;white-space:nowrap}.old-map-label span{display:block;background:rgba(255,255,255,.86);border:1px solid rgba(0,0,0,.55);padding:3px 6px;box-shadow:2px 2px 0 rgba(0,0,0,.18)}.old-map-label.city span{font-size:18px;letter-spacing:1px}.old-map-label.street span{font-size:12px}.old-map-label.node span{font-size:11px;color:#0b171d}.old-new-table{width:100%;border-collapse:collapse;margin-top:10px}.old-new-table td{border:1px solid var(--line2);padding:8px;vertical-align:top}.old-new-table td:first-child{color:var(--green);width:120px}.old-note{border-left:3px solid var(--green);padding-left:10px;color:#bdded3;margin-top:10px}
+.old-tiled-viewer{width:100%;height:680px;border:1px solid var(--line2);background:#020607;margin-bottom:10px}
+.old-viewer-toolbar{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:10px}
+.old-viewer-toolbar .button{width:auto;margin:0}
+.old-map-source{font-size:12px;color:var(--muted);line-height:1.5;margin:8px 0 14px}
+.old-map-source strong{color:var(--green)}
+.native-tile-viewer{position:relative;width:100%;height:680px;border:1px solid var(--line2);background:#020607;overflow:hidden;margin-bottom:10px;cursor:grab;touch-action:none;user-select:none}
+.native-tile-viewer.dragging{cursor:grabbing}
+.native-tile-stage{position:absolute;left:0;top:0;transform-origin:0 0}
+.native-tile{position:absolute;width:256px;height:256px;image-rendering:auto;user-select:none;-webkit-user-drag:none}
+.native-tile-info{position:absolute;left:10px;bottom:10px;background:rgba(2,6,7,.82);border:1px solid var(--line2);padding:7px 9px;color:var(--green);font-size:12px;z-index:5}
+.native-tile-loading{position:absolute;right:10px;bottom:10px;background:rgba(2,6,7,.82);border:1px solid var(--line2);padding:7px 9px;color:var(--muted);font-size:12px;z-index:5}
+.single-image-viewer{position:relative;width:100%;height:680px;border:1px solid var(--line2);background:#020607;overflow:hidden;margin-bottom:10px;cursor:grab;touch-action:none;user-select:none}
+.single-image-viewer.dragging{cursor:grabbing}
+.single-map-image{position:absolute;left:0;top:0;transform-origin:0 0;user-select:none;-webkit-user-drag:none;max-width:none;max-height:none}
+.single-map-info{position:absolute;left:10px;bottom:10px;background:rgba(2,6,7,.82);border:1px solid var(--line2);padding:7px 9px;color:var(--green);font-size:12px;z-index:5}
+.single-map-loading{position:absolute;right:10px;bottom:10px;background:rgba(2,6,7,.82);border:1px solid var(--line2);padding:7px 9px;color:var(--muted);font-size:12px;z-index:5}
+
+
+@media(max-width:960px){body{padding:8px}.layout{grid-template-columns:1fr}.status-grid{grid-template-columns:repeat(2,1fr)}.grid2,.scan-grid{grid-template-columns:1fr}#cityMap{height:420px}}@media(max-width:520px){.status-grid{grid-template-columns:1fr}#cityMap{height:360px}}
+</style>
+</head>
+<body>
+<div class="app">
+<header class="header"><div class="kicker">закрытая городская база данных</div><h1>ДЕЛО 13</h1><div class="subtitle">Полевая HTML-база. Карта городского слоя / зоны поиска / протокол Филиппова.</div><div class="status-grid"><div class="status-item">СТАТУС ДЕЛА<strong id="statusCase"></strong></div><div class="status-item">КЛЮЧ ДОСТУПА<strong id="statusKey"></strong></div><div class="status-item">ЦЕЛОСТНОСТЬ<strong id="statusIntegrity"></strong></div><div class="status-item">ОБЪЕКТЫ<strong id="statusObjects"></strong></div><div class="status-item">ПРОТОКОЛ<strong id="statusProtocol"></strong></div></div><div class="top-actions"><button class="button" onclick="resetProgress()">СБРОСИТЬ ПРОГРЕСС</button><button class="button" onclick="copySession()">СКОПИРОВАТЬ СТАТУС</button></div></header>
+<main class="layout"><aside><section class="panel"><h2>Разделы</h2><div class="menu" id="menu"></div></section><section class="panel"><h3>Стартовая фраза</h3><p class="small">Для активации маршрута требуются три начальных фрагмента.</p><input type="text" id="startPhrase" placeholder="Например: ГОРОД НЕ СХЕМА"/><button class="button" onclick="activateStartPhrase()">АКТИВИРОВАТЬ ПРОТОКОЛ</button><div id="startPhraseResult" class="small"></div></section><section class="panel"><h3>Фрагмент носителя</h3><div class="terminal">НЕ</div><p class="small">Остальные фрагменты должны быть у других участников.</p></section><section class="panel"><h3>Фрагменты блокировки</h3><div class="key-fragments" id="keyFragments"></div><p class="small">Каждый объект восстанавливает часть финального кода.</p></section></aside><section class="panel content" id="content"></section></main>
+</div>
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js" crossorigin=""></script>
+<script>
+const DELO13_DB={
+startPhrase:"ГОРОД НЕ СХЕМА",finalCode:"7294",finalReward:"ФИНАЛЬНАЯ ТОЧКА: СВЯЖИТЕСЬ С ВЕДУЩИМ И НАЗОВИТЕ КОД 7294",
+map:{center:[59.9386,30.3141],zoom:13,cityName:"САНКТ-ПЕТЕРБУРГ",oldCityName:"ЛЕНИНГРАД"},
+caseInfo:["ДЕЛО 13","","Тип: закрытая городская база данных","Статус: полевой HTML-доступ","Уровень доступа: ограниченный","","Официальное назначение:","учёт памятников, зданий, старых улиц, подземных коммуникаций и объектов городской инфраструктуры.","","Фактическое назначение:","связующий слой проекта «Контур».","","Главный ключ удалён из цифрового хранилища.","Последний пользователь: Филиппов И. И.","","Комментарий последнего пользователя:","«Данные можно украсть. Город нужно пройти»."],
+users:[{name:"ОПЕРАТОР",role:"внешний доступ",status:"уровень неизвестен",note:"Периодически пытается восстановить цифровой ключ ДЕЛА 13."},{name:"ФИЛИППОВ ИГНАТ ИГНАТОВИЧ",role:"архивный администратор",status:"последний локальный пользователь",note:"Последнее действие: экспорт фрагмента, удаление цифрового ключа, активация протокола разделения."},{name:"ГОСТЬ",role:"текущая сессия",status:"ограниченный доступ",note:"Доступ к маршруту возможен только после ввода стартовой фразы."}],
+contourLog:["LOG: CONTOUR_INIT","","Контур активирован.","Городской слой подключён.","Маршруты: индексируются.","Дворы: индексируются.","Проходы: индексируются.","Подземные коммуникации: частично доступны.","Слепые зоны: поиск...","","ОШИБКА:","ключ ДЕЛА 13 отсутствует.","","Статус:","система работает в ограниченном режиме.","","Последняя запись Филиппова:","«Я не удалил Дело. Я удалил путь к нему»."],
+files:[{id:"case_13_intro.txt",unlockAfter:-1,title:"Сведения о ДЕЛЕ 13",content:["ДЕЛО 13 не является обычным архивом.","Это связующий слой между историческими планами города и проектом «Контур».","","Филиппов удалил не сами данные.","Он удалил путь к ним."]},{id:"filippov_note_01.txt",unlockAfter:0,title:"Заметка Филиппова / объект 01",content:["Первую точку нельзя брать из карты.","Карта показывает дорогу, но не объясняет, куда вы пришли.","Начинайте там, где город впервые называет себя."]},{id:"old_layer_report.dat",unlockAfter:1,title:"Отчёт о старом слое",content:["Контур опирается на современные схемы.","Старый слой города содержит дворы, проходы и линии, которых нет в текущих картах.","Без старого слоя Контур видит город неполностью."]},{id:"operator_trace.log",unlockAfter:2,title:"След внешнего доступа",content:["ОПЕРАТОР обнаружил полевой доступ.","Попытка синхронизации: отклонена.","Попытка восстановить ключ: отклонена.","Примечание Ф.: «Не доверяйте адресу. Доверяйте признаку»."]},{id:"protocol_13.locked",unlockAfter:3,title:"Протокол блокировки",content:["Протокол готов к сборке.","Финальный код складывается из фрагментов, полученных на маршруте."]}],
+layers:[
+{name:"Официальный слой",unlockAfter:-1,note:"Современная карта Санкт-Петербурга.",description:"Обычная версия города: актуальные улицы, площади, станции, здания, памятники и публичные объекты. Это слой, который видят жители, навигаторы и открытые карты.",source:"современные карты, открытые городские данные, текущие названия улиц",contour:"Контур использует официальный слой как базовую сетку: куда можно вести людей сейчас, где проходят основные потоки, где находятся площади и узлы транспорта.",filippov:"Филиппов считал официальный слой неполным. Он показывает город таким, каким его удобно учитывать, но не показывает, каким город был и какие старые связи всё ещё влияют на маршруты."},
+{name:"Старый слой",unlockAfter:1,note:"Архивная версия Ленинграда: прежние названия, советские маршруты, старые связи.",description:"Старый слой — это не просто чёрно-белая карта. Это версия города из архивных планов: Ленинград, старые названия улиц, прежние площади, проходы, исчезнувшие связи и объекты, которые изменили функцию. В этом слое один и тот же участок города имеет два состояния: «раньше» и «сейчас».",source:"архивные планы, советские карты, старые адресные справочники, схемы проходов и служебных маршрутов",contour:"Контурy старый слой нужен, чтобы связать современный город с его прошлой структурой. Тогда система видит не только улицы, но и старые короткие пути, бывшие узлы движения и места, где город менял форму.",filippov:"Филиппов спрятал ключ именно в старом слое: машина может прочитать современную карту, но ошибается там, где у места было другое имя, другая функция и другая логика движения."},
+{name:"Слепые зоны",unlockAfter:2,note:"Места, где Контур теряет точность.",description:"Дворы, арки, переходы, закрытые углы и участки с неполным обзором. Там система хуже прогнозирует движение и чаще ошибается.",source:"расхождения между камерами, маршрутами и старыми планами",contour:"Контур стремится закрыть эти зоны, чтобы город стал полностью предсказуемым.",filippov:"Филиппов ведёт маршрут через слепые зоны, чтобы Оператор не мог автоматически восстановить ключ."},
+{name:"Маршрут Филиппова",unlockAfter:0,note:"Цепочка объектов, через которые собирается ключ блокировки.",description:"Не обычный туристический маршрут, а последовательность городских проверок. Каждый объект подтверждает фрагмент ключа и открывает следующий сектор.",source:"личные пометки Филиппова и локальная копия ДЕЛА 13",contour:"Для Контура этот маршрут выглядит как повреждённая последовательность без полного смысла.",filippov:"Это главный способ спрятать ключ: данные можно украсть, город нужно пройти."},
+{name:"Протокол блокировки",unlockAfter:3,note:"Финальный слой, собирающий фрагменты кода.",description:"Слой, который активируется после прохождения маршрута. Он собирает фрагменты блокировки и переводит Контур в ограниченный режим.",source:"закрытый файл protocol_13.locked",contour:"Если протокол не заблокировать, Контур сможет восстановить связку ДЕЛА 13.",filippov:"Филиппов оставил протокол как последнюю возможность остановить систему."}
+],
+oldLayerFeatures:[
+{id:"OLD-00",title:"Ленинград",kind:"архивное имя города",coords:[59.9386,30.3141],radius:520,label:"ЛЕНИНГРАД",labelClass:"city",oldName:"Ленинград",currentName:"Санкт-Петербург",then:"В старом слое город проходит как Ленинград: советская адресная сетка, другие названия площадей и улиц, другая логика транспортных и административных узлов.",now:"В официальном слое город снова отображается как Санкт-Петербург, с современными названиями и туристической логикой маршрутов.",description:"Главное отличие старого слоя: база смотрит на тот же город под другим именем. Из-за этого меняются подписи, связи и смысл объектов."},
+{id:"OLD-01",title:"Московский вокзал / Ленинград-Главный",kind:"точка прибытия",coords:[59.9297,30.3627],radius:260,label:"ЛЕНИНГРАД-ГЛАВНЫЙ",labelClass:"node",oldName:"Ленинград-Главный",currentName:"Московский вокзал",then:"Точка прибытия в Ленинград. Для ДЕЛА 13 это место, где город первым сообщает своё имя тем, кто входит в него через железную дорогу.",now:"Современный транспортный узел у площади Восстания. В официальном слое это просто вокзал и поток людей.",description:"Филиппов отмечал эту точку как «вход в слой»: здесь название города работает как ключ, а не как подпись на карте."},
+{id:"OLD-02",title:"Проспект 25 Октября",kind:"старая линия",coords:[[59.9297,30.3627],[59.9311,30.3440],[59.9343,30.3249],[59.9398,30.3146]],label:"ПР. 25 ОКТЯБРЯ",labelClass:"street",labelCoords:[59.9342,30.3299],oldName:"Проспект 25 Октября",currentName:"Невский проспект",then:"В советском слое Невский читается как проспект 25 Октября. Для Контура это не просто улица, а главная ось потока: линия, по которой город направляет людей.",now:"В современном слое это Невский проспект — центральная улица и очевидный туристический маршрут.",description:"На старом слое линия получает другое имя, поэтому база показывает: один и тот же маршрут может иметь разную историческую функцию."},
+{id:"OLD-03",title:"Площадь Урицкого",kind:"переименованная площадь",coords:[59.9398,30.3146],radius:260,label:"ПЛ. УРИЦКОГО",labelClass:"node",oldName:"Площадь Урицкого",currentName:"Дворцовая площадь",then:"В старом слое это площадь Урицкого — административный и массовый узел советского города.",now:"В официальном слое это Дворцовая площадь — исторический и туристический центр.",description:"Для Контура площадь важна как место управления потоками. Для Филиппова — как пример того, что имя меняет смысл объекта."},
+{id:"OLD-04",title:"Улица Желябова",kind:"старое название улицы",coords:[[59.9398,30.3146],[59.9386,30.3105],[59.9375,30.3086]],label:"УЛ. ЖЕЛЯБОВА",labelClass:"street",labelCoords:[59.9386,30.3105],oldName:"Улица Желябова",currentName:"Большая Конюшенная улица",then:"В старом слое эта линия проходит как улица Желябова. Она связывает площадь, дворы и внутренние проходы, которые Контур пытается превратить в управляемую схему.",now:"В современном слое это Большая Конюшенная улица и соседние проходы исторического центра.",description:"Филиппов использовал такие переименованные участки как защиту: система видит координаты, но без старого имени теряет часть смысла."},
+{id:"OLD-05",title:"Скрытая связка старого слоя",kind:"служебная связь",coords:[[59.9375,30.3086],[59.9341,30.3061]],label:"СЛУЖЕБНАЯ СВЯЗКА",labelClass:"street",labelCoords:[59.9358,30.3075],oldName:"служебная связка старого слоя",currentName:"разрозненные современные проходы",then:"В старом слое это единая связка между узлами: короткий маршрут, который не выглядит главным на современной карте.",now:"В официальном слое это набор отдельных улиц, дворов и переходов.",description:"Именно такие связки нужны Контурy: они позволяют не только наблюдать город, но и незаметно направлять движение."}
+],
+objects:[{id:"ОБЪЕКТ 01",title:"ТОЧКА ВХОДА",sector:"A-1",type:"городской маркер",coords:[59.9297,30.3627],zoneRadiusMeters:420,codeFragment:"7",text:["Фрагмент маршрута активирован.","","Пометка Филиппова:","«Начните там, где город впервые называет себя».","","Карта показывает улицы.","Вывеска показывает направление.","Но имя города первым видит тот, кто в него входит."],question:"ДЕМО: введите число 13. В реальном квесте замените вопрос на деталь с первой достопримечательности.",answers:["13"],hint1:"Подсказка 1: это проверочный демо-ответ, он указан в названии ДЕЛА.",hint2:"Подсказка 2: введите 13.",afterSuccess:"Фрагмент 01 восстановлен. Получен фрагмент блокировки: 7."},{id:"ОБЪЕКТ 02",title:"СТАРЫЙ СЛОЙ",sector:"B-3",type:"расхождение карты",coords:[59.9343,30.3249],zoneRadiusMeters:360,codeFragment:"2",text:["Филиппов отмечал объекты, где старые планы не совпадают с современными схемами.","","Контур видит город как карту.","Но карта врёт, когда город меняется."],question:"ДЕМО: введите 2217. В реальном квесте замените на год/число/слово с объекта.",answers:["2217"],hint1:"Подсказка 1: демо-ответ состоит из четырёх цифр.",hint2:"Подсказка 2: введите 2217.",afterSuccess:"Фрагмент 02 восстановлен. Получен фрагмент блокировки: 2."},{id:"ОБЪЕКТ 03",title:"СЛЕПАЯ ЗОНА",sector:"C-2",type:"зона без полного покрытия",coords:[59.9398,30.3146],zoneRadiusMeters:330,codeFragment:"9",text:["Внешний доступ обнаружен.","Оператор пытается восстановить связку ДЕЛА 13.","","Филиппов оставил проверку имени, чтобы маршрут нельзя было пройти автоматически."],question:"ДЕМО: введите фамилию последнего пользователя.",answers:["ФИЛИППОВ"],hint1:"Подсказка 1: фамилия указана в письме и в разделе пользователей.",hint2:"Подсказка 2: ФИЛИППОВ.",afterSuccess:"Фрагмент 03 восстановлен. Получен фрагмент блокировки: 9."},{id:"ОБЪЕКТ 04",title:"УЗЕЛ КОНТУРА",sector:"D-4",type:"узел городской схемы",coords:[59.9341,30.3061],zoneRadiusMeters:360,codeFragment:"4",text:["Контур не просто наблюдает.","Он прогнозирует маршруты, выявляет слепые зоны и направляет движение так, чтобы человек считал свой путь свободным.","","Главный ключ к системе был спрятан не в файлах, а в маршруте."],question:"ДЕМО: введите название проекта.",answers:["КОНТУР"],hint1:"Подсказка 1: название проекта встречается в письме Филиппова.",hint2:"Подсказка 2: КОНТУР.",afterSuccess:"Фрагмент 04 восстановлен. Получен фрагмент блокировки: 4."}],
+finalProtocol:["ПРОТОКОЛ ФИЛИППОВА","","Если вы дошли до этого файла, значит Контур ещё можно остановить.","","Я не смог уничтожить ДЕЛО 13.","Слишком много копий.","Слишком много следов.","Слишком много тех, кто ждал восстановления доступа.","","Поэтому я спрятал не само Дело.","Я спрятал ключ.","","Ключ невозможно найти в серверной.","Его можно собрать только в городе.","","Введите код блокировки."]
+};
+const STORAGE_KEY="DELO13_LEFT_HALF_1988_MAP_V1";let state=loadState();let mapInstance=null;let mapLayers=[];
+function defaultState(){return{activated:false,currentSection:"map",currentObject:0,solvedObjects:[],hintLevels:{},scannedObjects:[]}}
+function loadState(){try{const raw=localStorage.getItem(STORAGE_KEY);return raw?Object.assign(defaultState(),JSON.parse(raw)):defaultState()}catch(e){return defaultState()}}
+function saveState(){localStorage.setItem(STORAGE_KEY,JSON.stringify(state))}
+function resetProgress(){if(!confirm("Сбросить прохождение ДЕЛА 13 на этом устройстве?"))return;state=defaultState();document.getElementById("startPhrase").value="";saveState();render()}
+function normalizeText(s){return String(s||"").toUpperCase().replace(/Ё/g,"Е").replace(/[^А-ЯA-Z0-9]+/g," ").trim().replace(/\s+/g," ")}
+function escapeHtml(t){return String(t??"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")}
+function lines(a){return a.map(escapeHtml).join("\n")}function solvedCount(){return state.solvedObjects.length}function isSolved(id){return state.solvedObjects.includes(id)}function isScanned(id){return state.scannedObjects.includes(id)}function isObjectAvailable(i){return state.activated&&i<=state.currentObject}function unlockedByProgress(u){return u<solvedCount()}function integrity(){if(!state.activated)return 13;return Math.min(100,25+solvedCount()*Math.floor(75/DELO13_DB.objects.length))}
+function activateStartPhrase(){const typed=normalizeText(document.getElementById("startPhrase").value),correct=normalizeText(DELO13_DB.startPhrase);if(typed===correct){state.activated=true;state.currentSection="map";saveState();document.getElementById("startPhraseResult").innerHTML='<span style="color:var(--ok)">СТАРТОВЫЙ КЛЮЧ ПРИНЯТ. Городской слой активирован.</span>';render()}else document.getElementById("startPhraseResult").innerHTML='<span style="color:var(--err)">Фраза не совпадает с архивным слоем. Требуется 3 фрагмента.</span>'}
+function setSection(s){state.currentSection=s;saveState();render()}function updateStatus(){document.getElementById("statusCase").textContent=state.activated?"режим восстановления":"повреждено";document.getElementById("statusKey").textContent=state.activated?"принят":"неполный";document.getElementById("statusIntegrity").textContent=integrity()+"%";document.getElementById("statusObjects").textContent=`${solvedCount()}/${DELO13_DB.objects.length}`;document.getElementById("statusProtocol").textContent=solvedCount()>=DELO13_DB.objects.length?"готов":(state.activated?"ожидает маршрут":"заблокирован")}
+function renderMenu(){const items=[["map","00 / ГОРОДСКОЙ СЛОЙ"],["oldlayer","01 / СТАРЫЙ СЛОЙ"],["case","02 / СВЕДЕНИЯ О ДЕЛЕ"],["users","03 / ПОЛЬЗОВАТЕЛИ"],["contour","04 / ЖУРНАЛ КОНТУРА"],["objects","05 / ОБЪЕКТЫ ГОРОДА"],["files","06 / ФАЙЛЫ ДЕЛА"],["operator","07 / ВНЕШНИЙ ДОСТУП"],["protocol","08 / ПРОТОКОЛ БЛОКИРОВКИ"],["manual","09 / НАСТРОЙКА"]];document.getElementById("menu").innerHTML=items.map(([id,label])=>`<button class="${state.currentSection===id?"active":""}" onclick="setSection('${id}')">${label}</button>`).join("")}
+function renderKeyFragments(){document.getElementById("keyFragments").innerHTML=DELO13_DB.objects.map(o=>`<div class="fragment ${isSolved(o.id)?"active":""}">${isSolved(o.id)?escapeHtml(o.codeFragment):"?"}</div>`).join("")}
+function render(){saveState();updateStatus();renderMenu();renderKeyFragments();mapInstance=null;mapLayers=[];({map:renderMapSection,oldlayer:renderOldLayerSection,case:renderCase,users:renderUsers,contour:renderContour,objects:renderObjects,files:renderFiles,operator:renderOperator,protocol:renderProtocol,manual:renderManual}[state.currentSection]||renderMapSection)()}
+function renderMapSection(){const progress=Math.round(solvedCount()/DELO13_DB.objects.length*100);document.getElementById("content").innerHTML=`<h2>Городской слой / карта зон</h2><p class="small">Карта показывает зоны поиска, а не точные ответы. Новые зоны открываются по мере восстановления маршрута. Для старого слоя есть отдельная карта в разделе «Старый слой».</p><div class="map-toolbar"><button class="button inline" onclick="fitMapToAvailableZones()">ПОКАЗАТЬ АКТИВНЫЕ ЗОНЫ</button><button class="button inline" onclick="setSection('oldlayer')">ОТКРЫТЬ СТАРЫЙ СЛОЙ</button><button class="button inline" onclick="setSection('objects')">ПЕРЕЙТИ К ОБЪЕКТАМ</button><button class="button inline" onclick="setSection('files')">ФАЙЛЫ ДЕЛА</button></div><div id="cityMap"></div><div id="mapFallback" class="map-fallback" style="display:none"></div><div class="grid2"><div><h3>Слои города</h3>${renderLayers()}</div><div><h3>Зоны поиска</h3>${renderZoneCards()}</div></div><h3>Описание слоёв</h3>${renderLayerDescriptions()}<div class="info">Целостность ДЕЛА 13: ${integrity()}%<div class="progress"><div style="width:${integrity()}%"></div></div>Маршрут восстановлен: ${progress}%</div>`;setTimeout(initMap,50)}
+function renderLayers(){return DELO13_DB.layers.map((l,idx)=>{const open=unlockedByProgress(l.unlockAfter)||l.name==="Официальный слой";return `<div class="layer-row"><div><strong>${escapeHtml(l.name)}</strong><br><span class="small">${escapeHtml(open?l.note:"Слой закрыт. Требуется восстановление маршрута.")}</span></div><span class="badge ${open?"ok":"dim"}">${open?"ДОСТУПЕН":"ЗАКРЫТ"}</span></div>`}).join("")}
+function renderLayerDescriptions(){return DELO13_DB.layers.map(l=>{const open=unlockedByProgress(l.unlockAfter)||l.name==="Официальный слой";return `<div class="layer-detail"><h4>${escapeHtml(l.name)}</h4><span class="badge ${open?"ok":"dim"}">${open?"ДОСТУПЕН":"ЗАКРЫТ"}</span><p><span class="label">Что это:</span> ${escapeHtml(open?l.description:"Описание скрыто до восстановления слоя.")}</p>${open?`<p><span class="label">Источник:</span> ${escapeHtml(l.source)}</p><p><span class="label">Зачем это Контурy:</span> ${escapeHtml(l.contour)}</p><p><span class="label">Зачем это Филиппову:</span> ${escapeHtml(l.filippov)}</p>`:""}</div>`}).join("")}
+function renderOldLayerSection(){const open=unlockedByProgress(1);document.getElementById("content").innerHTML=`<h2>Старый слой / Ленинград 1988</h2><p class="small">Старый слой использует локальную JPG-карту старого слоя Ленинграда 1988 года. Её можно листать и приближать без тайлов и без внешних библиотек.</p>${open?`<div class="old-viewer-toolbar"><button class="button inline" onclick="oldViewerZoomIn()">ПРИБЛИЗИТЬ</button><button class="button inline" onclick="oldViewerZoomOut()">ОТДАЛИТЬ</button><button class="button inline" onclick="oldViewerHome()">ПОКАЗАТЬ ВСЮ КАРТУ</button><button class="button inline" onclick="setSection('map')">ВЕРНУТЬСЯ К ГОРОДСКОМУ СЛОЮ</button></div><div id="oldLayerViewer" class="single-image-viewer"><img id="oldMapImage" class="single-map-image" src="assets/leningrad_1988_left_half.jpg" draggable="false" alt="Ленинград 1988"><div id="oldMapInfo" class="single-map-info">Ленинград 1988</div><div id="oldMapLoading" class="single-map-loading">загрузка JPG...</div></div><div class="old-map-source"><strong>Источник старого слоя:</strong> загруженная карта Ленинграда 1988 года из левой половины туристской схемы Ленинграда 1988 года для просмотра в браузере.</div><div class="legend"><span>локальная JPG-карта</span><span>без тайлов</span><span>можно зумить и листать</span><span>карточки ниже — «раньше / сейчас»</span></div><div class="info">В официальном слое: <strong>Санкт-Петербург</strong>. В старом слое: <strong>Ленинград</strong>. Сравнивайте названия, линии и функции мест: ДЕЛО 13 использует не только координаты, но и исторический смысл объектов.</div><div class="grid2">${renderOldFeatureCards()}</div>`:`<div class="terminal locked">СТАРЫЙ СЛОЙ ЗАКРЫТ.
+
+Для доступа нужно подтвердить объект 02.
+
+Филиппов:
+«Старый слой открывается только тем, кто понял, что карта не равна городу».</div>`}<h3>Суть старого слоя</h3><div class="terminal">Старый слой — это версия города из архивной карты.
+
+Он хранит:
+— Ленинград вместо Санкт-Петербурга
+— старые советские названия улиц и площадей
+— проектные и упразднённые улицы
+— прежнюю логику районов, транспортных осей и городских узлов
+— связи между местами, которых не видно на современной карте
+
+Контур хочет использовать этот слой, чтобы видеть город глубже обычной карты.
+Филиппов использует этот же слой как защиту: без понимания прошлого система путает координаты, имена и смысл объектов.</div>`;if(open)setTimeout(initOldImageViewer,80)}
+
+let oldImageViewer=null;
+const OLD_IMAGE_MAP={width:1024,height:1287,minScale:0.06,maxScale:5};
+
+function initOldImageViewer(){
+  const viewer=document.getElementById("oldLayerViewer");
+  const img=document.getElementById("oldMapImage");
+  if(!viewer||!img)return;
+
+  oldImageViewer={viewer,img,scale:1,x:0,y:0,dragging:false,lastX:0,lastY:0};
+
+  img.onload=function(){
+    const loading=document.getElementById("oldMapLoading");
+    if(loading)loading.textContent="JPG загружен";
+    oldViewerHome();
+  };
+
+  if(img.complete) {
+    const loading=document.getElementById("oldMapLoading");
+    if(loading)loading.textContent="JPG загружен";
+    oldViewerHome();
+  }
+
+  viewer.addEventListener("mousedown",oldImagePointerDown);
+  window.addEventListener("mousemove",oldImagePointerMove);
+  window.addEventListener("mouseup",oldImagePointerUp);
+
+  viewer.addEventListener("touchstart",oldImageTouchStart,{passive:false});
+  viewer.addEventListener("touchmove",oldImageTouchMove,{passive:false});
+  viewer.addEventListener("touchend",oldImageTouchEnd,{passive:false});
+
+  viewer.addEventListener("wheel",function(e){
+    e.preventDefault();
+    const rect=viewer.getBoundingClientRect();
+    const cx=e.clientX-rect.left;
+    const cy=e.clientY-rect.top;
+    if(e.deltaY<0) oldImageZoomAt(1.25,cx,cy);
+    else oldImageZoomAt(0.8,cx,cy);
+  },{passive:false});
+
+  window.addEventListener("resize",function(){if(oldImageViewer){oldImageClamp();oldImageRender()}});
+}
+
+function oldImageRender(){
+  const st=oldImageViewer;if(!st)return;
+  oldImageClamp();
+  st.img.style.transform=`translate(${st.x}px,${st.y}px) scale(${st.scale})`;
+  st.img.style.width=OLD_IMAGE_MAP.width+"px";
+  st.img.style.height=OLD_IMAGE_MAP.height+"px";
+  const info=document.getElementById("oldMapInfo");
+  if(info)info.textContent="Ленинград 1988 / левый лист / масштаб "+Math.round(st.scale*100)+"%";
+}
+
+function oldImageClamp(){
+  const st=oldImageViewer;if(!st)return;
+  const vw=st.viewer.clientWidth||800;
+  const vh=st.viewer.clientHeight||600;
+  const sw=OLD_IMAGE_MAP.width*st.scale;
+  const sh=OLD_IMAGE_MAP.height*st.scale;
+  if(sw<=vw) st.x=(vw-sw)/2;
+  else st.x=Math.min(40,Math.max(vw-sw-40,st.x));
+  if(sh<=vh) st.y=(vh-sh)/2;
+  else st.y=Math.min(40,Math.max(vh-sh-40,st.y));
+}
+
+function oldViewerHome(){
+  const st=oldImageViewer;if(!st)return;
+  const vw=st.viewer.clientWidth||800;
+  const vh=st.viewer.clientHeight||600;
+  st.scale=Math.min(vw/OLD_IMAGE_MAP.width, vh/OLD_IMAGE_MAP.height);
+  st.scale=Math.max(OLD_IMAGE_MAP.minScale, Math.min(OLD_IMAGE_MAP.maxScale, st.scale));
+  st.x=(vw-OLD_IMAGE_MAP.width*st.scale)/2;
+  st.y=(vh-OLD_IMAGE_MAP.height*st.scale)/2;
+  oldImageRender();
+}
+
+function oldImageZoomAt(factor,cx,cy){
+  const st=oldImageViewer;if(!st)return;
+  const oldScale=st.scale;
+  const newScale=Math.max(OLD_IMAGE_MAP.minScale,Math.min(OLD_IMAGE_MAP.maxScale,oldScale*factor));
+  if(newScale===oldScale)return;
+  const ratio=newScale/oldScale;
+  st.x=cx-(cx-st.x)*ratio;
+  st.y=cy-(cy-st.y)*ratio;
+  st.scale=newScale;
+  oldImageRender();
+}
+
+function oldViewerZoomIn(){
+  const st=oldImageViewer;if(!st)return;
+  oldImageZoomAt(1.35,st.viewer.clientWidth/2,st.viewer.clientHeight/2);
+}
+
+function oldViewerZoomOut(){
+  const st=oldImageViewer;if(!st)return;
+  oldImageZoomAt(0.74,st.viewer.clientWidth/2,st.viewer.clientHeight/2);
+}
+
+function oldImagePointerDown(e){
+  const st=oldImageViewer;if(!st)return;
+  st.dragging=true;st.lastX=e.clientX;st.lastY=e.clientY;st.viewer.classList.add("dragging");
+}
+
+function oldImagePointerMove(e){
+  const st=oldImageViewer;if(!st||!st.dragging)return;
+  st.x+=e.clientX-st.lastX;st.y+=e.clientY-st.lastY;st.lastX=e.clientX;st.lastY=e.clientY;oldImageRender();
+}
+
+function oldImagePointerUp(){
+  const st=oldImageViewer;if(!st)return;
+  st.dragging=false;st.viewer.classList.remove("dragging");
+}
+
+function oldImageTouchStart(e){
+  if(e.touches.length!==1)return;
+  e.preventDefault();
+  const t=e.touches[0];
+  oldImagePointerDown({clientX:t.clientX,clientY:t.clientY});
+}
+
+function oldImageTouchMove(e){
+  if(e.touches.length!==1)return;
+  e.preventDefault();
+  const t=e.touches[0];
+  oldImagePointerMove({clientX:t.clientX,clientY:t.clientY});
+}
+
+function oldImageTouchEnd(e){
+  e.preventDefault();
+  oldImagePointerUp();
+}
+
+function renderOldFeatureCards(){return DELO13_DB.oldLayerFeatures.map(f=>`<div class="old-feature"><h4>${escapeHtml(f.id)} / ${escapeHtml(f.title)}</h4><span class="badge">${escapeHtml(f.kind)}</span><table class="old-new-table"><tr><td>Раньше</td><td>${escapeHtml(f.oldName||"архивное состояние")}</td></tr><tr><td>Сейчас</td><td>${escapeHtml(f.currentName||"современное состояние")}</td></tr></table><p><span class="label">В старом слое:</span> ${escapeHtml(f.then||"")}</p><p><span class="label">В официальном слое:</span> ${escapeHtml(f.now||"")}</p><div class="old-note">${escapeHtml(f.description)}</div></div>`).join("")}
+
+function initOldLayerMap(){if(typeof L==="undefined"){showMapFallback("Модуль карты не загружен. Старый слой можно посмотреть в списке объектов ниже.");return}try{mapInstance=L.map("oldLayerMap",{zoomControl:true,attributionControl:true}).setView(DELO13_DB.map.center,DELO13_DB.map.zoom);mapInstance.attributionControl.setPrefix(false);L.tileLayer("https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png",{maxZoom:19,attribution:"&copy; OpenStreetMap contributors &copy; CARTO"}).addTo(mapInstance);drawOldLayer();fitOldLayerMap()}catch(e){showMapFallback("Старая карта не открылась: "+e.message)}}
+function drawOldLayer(){if(!mapInstance||typeof L==="undefined")return;DELO13_DB.oldLayerFeatures.forEach((f,idx)=>{const color=idx<solvedCount()+2?"#8affba":"#ffd79c";const popup=`<strong>${escapeHtml(f.id)} / ${escapeHtml(f.title)}</strong><br><br><strong>Раньше:</strong> ${escapeHtml(f.oldName||"") }<br><strong>Сейчас:</strong> ${escapeHtml(f.currentName||"")}<br><br>${escapeHtml(f.description)}`;let labelPoint=null;if(Array.isArray(f.coords[0])){const line=L.polyline(f.coords,{color,weight:3,dashArray:"8 8",opacity:.95}).addTo(mapInstance);line.bindPopup(popup);mapLayers.push(line);labelPoint=f.labelCoords||f.coords[Math.floor(f.coords.length/2)]}else{const circle=L.circle(f.coords,{radius:f.radius||220,color,weight:2,fillColor:color,fillOpacity:.12}).addTo(mapInstance);const marker=L.circleMarker(f.coords,{radius:7,color,weight:2,fillColor:"#020607",fillOpacity:1}).addTo(mapInstance);circle.bindPopup(popup);marker.bindPopup(popup);mapLayers.push(circle,marker);labelPoint=f.labelCoords||f.coords}if(f.label&&labelPoint){const label=L.marker(labelPoint,{interactive:false,icon:L.divIcon({className:`old-map-label ${f.labelClass||"node"}`,html:`<span>${escapeHtml(f.label)}</span>`,iconSize:null})}).addTo(mapInstance);mapLayers.push(label)}})}
+
+function fitOldLayerMap(){if(!mapInstance||typeof L==="undefined")return;const pts=[];DELO13_DB.oldLayerFeatures.forEach(f=>{if(Array.isArray(f.coords[0]))f.coords.forEach(p=>pts.push(p));else pts.push(f.coords)});if(pts.length)mapInstance.fitBounds(L.latLngBounds(pts),{padding:[40,40]})}
+function renderZoneCards(){return DELO13_DB.objects.map((o,i)=>{const av=isObjectAvailable(i),sol=isSolved(o.id),st=sol?"ПОДТВЕРЖДЕНА":(av?"АКТИВНА":"ЗАКРЫТА"),cls=sol?"ok":(av?"warn":"dim");return `<div class="card"><h3>${escapeHtml(o.sector)} / ${escapeHtml(av?o.title:"данные скрыты")}</h3><span class="badge ${cls}">${st}</span><span class="badge">${escapeHtml(o.type)}</span><p class="small">Радиус зоны: ${av?o.zoneRadiusMeters+" м":"скрыт"}<br>Координаты: ${av?o.coords.join(", "):"[данные удалены]"}</p></div>`}).join("")}
+function initMap(){if(typeof L==="undefined"){showMapFallback("Модуль карты не загружен. Проверьте интернет или используйте список зон ниже.");return}try{mapInstance=L.map("cityMap",{zoomControl:true,attributionControl:true}).setView(DELO13_DB.map.center,DELO13_DB.map.zoom);mapInstance.attributionControl.setPrefix(false);L.tileLayer("https://{s}.basemaps.cartocdn.com/rastertiles/voyager/{z}/{x}/{y}{r}.png",{maxZoom:19,attribution:"&copy; OpenStreetMap contributors &copy; CARTO"}).addTo(mapInstance);drawZonesOnMap();fitMapToAvailableZones()}catch(e){showMapFallback("Карта не открылась: "+e.message)}}
+function drawZonesOnMap(){if(!mapInstance||typeof L==="undefined")return;DELO13_DB.objects.forEach((o,i)=>{const av=isObjectAvailable(i),sol=isSolved(o.id);if(!av&&state.activated)return;if(!state.activated&&i>0)return;const color=sol?"#8affba":(av?"#ffd79c":"#556c65"),fillOpacity=sol?.12:(av?.16:.06);const circle=L.circle(o.coords,{radius:av?o.zoneRadiusMeters:200,color,weight:2,fillColor:color,fillOpacity}).addTo(mapInstance);const marker=L.circleMarker(o.coords,{radius:7,color,weight:2,fillColor:"#020607",fillOpacity:1}).addTo(mapInstance);const title=av?`${o.id} / ${o.title}`:`${o.id} / закрыто`,status=sol?"подтверждён":(av?"активен":"закрыт");const popup=`<strong>${escapeHtml(title)}</strong><br>Сектор: ${escapeHtml(o.sector)}<br>Статус: ${status}<br>Радиус: ${av?o.zoneRadiusMeters+" м":"скрыт"}<br>${av?"Перейдите в раздел «Объекты города» для проверки.":"Данные скрыты."}`;circle.bindPopup(popup);marker.bindPopup(popup);mapLayers.push(circle,marker)})}
+function fitMapToAvailableZones(){if(!mapInstance||typeof L==="undefined")return;const coords=[];DELO13_DB.objects.forEach((o,i)=>{if(isObjectAvailable(i)||isSolved(o.id)||(!state.activated&&i===0))coords.push(o.coords)});if(coords.length===0){mapInstance.setView(DELO13_DB.map.center,DELO13_DB.map.zoom);return}if(coords.length===1){mapInstance.setView(coords[0],15);return}mapInstance.fitBounds(L.latLngBounds(coords),{padding:[40,40]})}
+function showMapFallback(msg){const fb=document.getElementById("mapFallback"),map=document.getElementById("cityMap");if(map)map.style.display="none";if(fb){fb.style.display="block";fb.innerHTML=`<strong>Карта недоступна.</strong><br>${escapeHtml(msg)}<br><br>${DELO13_DB.objects.map((o,i)=>`${o.sector}: ${isObjectAvailable(i)?o.title+" / "+o.coords.join(", "):"[закрыто]"}`).join("<br>")}`}}
+function renderCase(){document.getElementById("content").innerHTML=`<h2>Сведения о деле</h2><div class="terminal">${lines(DELO13_DB.caseInfo)}</div><div class="warning">ПРИМЕЧАНИЕ: главный ключ удалён из цифрового хранилища. Доступ возможен только через маршрут.</div>`}
+function renderUsers(){document.getElementById("content").innerHTML=`<h2>Пользователи</h2>${DELO13_DB.users.map(u=>`<div class="card"><h3>${escapeHtml(u.name)}</h3><span class="badge">${escapeHtml(u.role)}</span><span class="badge">${escapeHtml(u.status)}</span><p class="small">${escapeHtml(u.note)}</p></div>`).join("")}`}
+function renderContour(){document.getElementById("content").innerHTML=`<h2>Журнал Контура</h2><div class="terminal">${lines(DELO13_DB.contourLog)}</div><div class="error">ВНЕШНЕЕ ПОДКЛЮЧЕНИЕ: периодические попытки доступа к ДЕЛУ 13 продолжаются.</div>`}
+function renderObjects(){if(!state.activated){document.getElementById("content").innerHTML=`<h2>Объекты города</h2><div class="terminal locked">ДОСТУП ЗАПРЕЩЁН.\n\nДля открытия списка объектов требуется стартовая фраза.\n\nФрагменты доступа: 1/3\nОжидаются ещё два фрагмента.</div>`;return}const progress=Math.round(solvedCount()/DELO13_DB.objects.length*100);document.getElementById("content").innerHTML=`<h2>Объекты города</h2><p class="small">Подтверждайте объекты по порядку. После верного ответа откроется следующий фрагмент маршрута и новая зона на карте.</p><div class="progress"><div style="width:${progress}%"></div></div><p class="small">Восстановлено: ${solvedCount()} из ${DELO13_DB.objects.length}</p>${DELO13_DB.objects.map((o,i)=>renderObject(o,i)).join("")}`}
+function renderObject(o,i){const av=isObjectAvailable(i),sol=isSolved(o.id),sc=isScanned(o.id),hl=state.hintLevels[o.id]||0;if(!av)return `<div class="card"><h3>${escapeHtml(o.id)} / данные скрыты</h3><span class="badge dim">СЕКТОР ЗАКРЫТ</span><div class="terminal locked">ОБЪЕКТ ЗАКРЫТ.\nПредыдущий фрагмент маршрута не подтверждён.</div></div>`;const hintHtml=hl===0?"":`<div class="hint">${escapeHtml(hl===1?o.hint1:o.hint2)}</div>`;const scanHtml=sc?`<div class="scan-grid"><div class="scan-cell">Сектор<strong>${escapeHtml(o.sector)}</strong></div><div class="scan-cell">Тип объекта<strong>${escapeHtml(o.type)}</strong></div><div class="scan-cell">Радиус зоны<strong>${o.zoneRadiusMeters} м</strong></div><div class="scan-cell">Совпадение с ДЕЛОМ 13<strong>${sol?"100%":"74%"}</strong></div></div>`:"";const controls=sol?`<div class="success">ОБЪЕКТ ПОДТВЕРЖДЁН.<br>${escapeHtml(o.afterSuccess)}</div>`:`<p><strong>Проверка объекта:</strong></p><p>${escapeHtml(o.question)}</p><input type="text" id="answer_${i}" placeholder="Введите ответ..."/><button class="button" onclick="checkObjectAnswer(${i})">ПОДТВЕРДИТЬ ОБЪЕКТ</button><button class="button" onclick="scanObject('${o.id}')">СКАНИРОВАТЬ ОБЪЕКТ</button><button class="button" onclick="showHint('${o.id}')">РАСШИФРОВАТЬ ЗАМЕТКУ ФИЛИППОВА</button><div id="answerResult_${i}" class="small"></div>${scanHtml}${hintHtml}`;return `<div class="card"><h3>${escapeHtml(o.id)} / ${escapeHtml(o.title)}</h3><span class="badge">${escapeHtml(o.sector)}</span><span class="badge">${escapeHtml(o.type)}</span><span class="badge warn">ЗОНА ${o.zoneRadiusMeters} М</span><div class="terminal">${lines(o.text)}</div>${controls}</div>`}
+function scanObject(id){if(!state.scannedObjects.includes(id))state.scannedObjects.push(id);saveState();renderObjects()}function showHint(id){state.hintLevels[id]=Math.min(2,(state.hintLevels[id]||0)+1);saveState();renderObjects()}
+function checkObjectAnswer(i){const o=DELO13_DB.objects[i],typed=normalizeText(document.getElementById(`answer_${i}`).value),ok=o.answers.some(a=>normalizeText(a)===typed);if(ok){if(!state.solvedObjects.includes(o.id))state.solvedObjects.push(o.id);if(i===state.currentObject&&state.currentObject<DELO13_DB.objects.length-1)state.currentObject++;state.currentSection="map";saveState();render()}else document.getElementById(`answerResult_${i}`).innerHTML='<span style="color:var(--err)">Ответ не совпадает с архивным слоем. Проверьте объект ещё раз.</span>'}
+function renderFiles(){document.getElementById("content").innerHTML=`<h2>Файлы дела</h2><p class="small">Файлы открываются по мере восстановления маршрута.</p>${DELO13_DB.files.map(renderFile).join("")}`}
+function renderFile(f){const open=unlockedByProgress(f.unlockAfter);return open?`<div class="card"><h3>${escapeHtml(f.id)}</h3><span class="badge ok">ОТКРЫТО</span><p><strong>${escapeHtml(f.title)}</strong></p><div class="terminal">${lines(f.content)}</div></div>`:`<div class="card"><h3>${escapeHtml(f.id)}</h3><span class="badge dim">ЗАКРЫТО</span><div class="terminal locked">Файл повреждён или зашифрован.\nТребуется восстановить дополнительные объекты маршрута.</div></div>`}
+function renderOperator(){const entries=[{min:0,time:"13:02",text:"ОПЕРАТОР запросил доступ к локальному фрагменту. Доступ отклонён."},{min:1,time:"13:17",text:"Обнаружено подтверждение объекта 01. Начата попытка пересчёта маршрута."},{min:2,time:"13:41",text:"ОПЕРАТОР обнаружил старый слой. Попытка синхронизации: отклонена."},{min:3,time:"14:06",text:"Внешнее подключение пытается восстановить ключ. Маршрут Филиппова изменён."},{min:4,time:"14:22",text:"Протокол блокировки готов. ОПЕРАТОР потерял доступ к городскому слою."}].filter(e=>e.min<=solvedCount());document.getElementById("content").innerHTML=`<h2>Внешний доступ / Оператор</h2><div class="error">В системе зафиксирован второй пользователь. Идентификатор скрыт. Уровень доступа неизвестен.</div><div class="timeline">${entries.map(e=>`<p class="log-entry"><strong>[${e.time}]</strong> ${escapeHtml(e.text)}</p>`).join("")}</div><div class="terminal">Последняя запись:\n«Не спорьте с системой на её языке.\nВыведите её в город. Там она ошибается».\n— Ф.</div>`}
+function renderProtocol(){if(!state.activated){document.getElementById("content").innerHTML=`<h2>Протокол блокировки</h2><div class="terminal locked">PROTOCOL_13_LOCKED\n\nДля доступа требуется стартовая фраза.</div>`;return}if(solvedCount()<DELO13_DB.objects.length){document.getElementById("content").innerHTML=`<h2>Протокол блокировки</h2><div class="terminal locked">PROTOCOL_13_LOCKED\n\nМаршрут Филиппова не завершён.\nПодтверждено объектов: ${solvedCount()}/${DELO13_DB.objects.length}\n\nВернитесь в раздел «Объекты города».</div><h3>Собранные фрагменты</h3><div class="key-fragments">${DELO13_DB.objects.map(o=>`<div class="fragment ${isSolved(o.id)?"active":""}">${isSolved(o.id)?escapeHtml(o.codeFragment):"?"}</div>`).join("")}</div>`;return}const assembled=DELO13_DB.objects.map(o=>o.codeFragment).join("");document.getElementById("content").innerHTML=`<h2>Протокол блокировки</h2><div class="terminal">${lines(DELO13_DB.finalProtocol)}</div><h3>Собранный код</h3><div class="key-fragments">${DELO13_DB.objects.map(o=>`<div class="fragment active">${escapeHtml(o.codeFragment)}</div>`).join("")}</div><p class="small">Система восстановила последовательность: ${escapeHtml(assembled)}</p><h3>Введите код блокировки</h3><input type="text" id="finalCode" placeholder="Код..."/><button class="button" onclick="checkFinalCode()">АКТИВИРОВАТЬ БЛОКИРОВКУ</button><div id="finalResult"></div>`}
+function checkFinalCode(){const typed=normalizeText(document.getElementById("finalCode").value),correct=normalizeText(DELO13_DB.finalCode);document.getElementById("finalResult").innerHTML=typed===correct?`<div class="success"><strong>КОД ПРИНЯТ.</strong><br>Контур: отключён.<br>ДЕЛО 13: заблокировано.<br>Ключ доступа: уничтожен.</div><div class="final-code">${escapeHtml(DELO13_DB.finalReward)}</div>`:`<div class="error">Код не совпадает с протоколом Филиппова.</div>`}
+function renderManual(){document.getElementById("content").innerHTML=`<h2>Настройка базы</h2><div class="terminal">Это обычный HTML-файл с настоящей картой OpenStreetMap.\n\nКак использовать:\n1. Откройте DELO_13_DATABASE_MAP.html в браузере.\n2. Для карты нужен интернет.\n3. Для прохождения с телефона загрузите файл на хостинг и дайте участникам ссылку.\n4. Прогресс сохраняется в браузере на конкретном устройстве.\n\nКак заменить город:\n1. Откройте файл в Блокноте.\n2. Найдите блок DELO13_DB.\n3. В map.center поставьте координаты центра города.\n4. В objects[].coords поставьте координаты зон объектов.\n5. В objects[].zoneRadiusMeters задайте радиус зоны.\n6. В objects[].question и objects[].answers замените демо-вопросы на реальные.\n\nЧто добавлено:\n- настоящая карта с зонами поиска;\n- отдельная карта старого слоя;\n- подробные описания всех слоёв;\n- слои города;\n- досье объектов;\n- сканер объекта;\n- файлы ДЕЛА;\n- журнал Оператора;\n- целостность базы;\n- сборка финального кода по фрагментам.</div>`}
+function copySession(){const text=["ДЕЛО 13 / СТАТУС СЕССИИ","Протокол активирован: "+(state.activated?"да":"нет"),"Целостность: "+integrity()+"%","Объекты: "+solvedCount()+"/"+DELO13_DB.objects.length,"Текущий объект: "+(state.currentObject+1),"Подтверждено: "+state.solvedObjects.join(", "),"Кодовые фрагменты: "+DELO13_DB.objects.map(o=>isSolved(o.id)?o.codeFragment:"?").join("")].join("\n");if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(text).then(()=>alert("Статус скопирован."));else prompt("Скопируйте статус:",text)}
+render();
+</script>
+</body>
+</html>
